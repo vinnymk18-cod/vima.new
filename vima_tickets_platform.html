@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIMA TICKETS | One Platform. Every Event. Every Fan.</title>
+    
+    <!-- Google Fonts & Phosphor Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM & BASE STYLES
+           ========================================================================== */
+        :root {
+            --bg-dark: #0B0F19;
+            --bg-card: #111827;
+            --bg-card-hover: #1F2937;
+            --bg-glass: rgba(17, 24, 39, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            
+            --primary: #4F46E5;
+            --primary-light: #6366F1;
+            --violet: #7C3AED;
+            --violet-glow: #8B5CF6;
+            --accent-green: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-rose: #EF4444;
+            
+            --text-main: #FFFFFF;
+            --text-muted: #9CA3AF;
+            --text-sub: #D1D5DB;
+            --lavender: #E0E7FF;
+            --soft-bg: #EEF2FF;
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            --shadow-glow: 0 0 25px rgba(124, 58, 237, 0.35);
+            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background: none;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input, select, textarea {
+            font-family: inherit;
+            outline: none;
+            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--violet-glow);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+        }
+
+        /* Ambient Background Gradients */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+        }
+
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary); }
+        .orb-2 { bottom: -10%; right: -10%; width: 45vw; height: 45vw; background: var(--violet); }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--violet));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-mpesa {
+            background: linear-gradient(135deg, #05B048, #038034);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn-mpesa:hover {
+            box-shadow: 0 0 20px rgba(5, 176, 72, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-purple { background: rgba(124, 58, 237, 0.2); color: var(--violet-glow); border: 1px solid rgba(124, 58, 237, 0.4); }
+        .badge-green { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-amber { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-red { background: rgba(239, 68, 68, 0.2); color: var(--accent-rose); border: 1px solid rgba(239, 68, 68, 0.4); }
+
+        /* Glassmorphic Panel */
+        .glass-panel {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+        }
+
+        /* Dynamic Demo Banner */
+        .demo-bar {
+            background: linear-gradient(90deg, #312E81, #581C87);
+            padding: 8px 16px;
+            font-size: 0.825rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .demo-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-role-select {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.4);
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            width: auto;
+        }
+
+        /* Navbar */
+        header.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFF, var(--lavender));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-logo i {
+            color: var(--violet-glow);
+            -webkit-text-fill-color: initial;
+            font-size: 1.6rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: 0.925rem;
+            font-weight: 500;
+            color: var(--text-sub);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .user-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--violet);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           2. VIEW CONTAINER & ROUTING
+           ========================================================================== */
+        .page-view {
+            display: none;
+            padding: 30px 0 60px;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-view.active-view {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           3. HOMEPAGE & HERO SECTION
+           ========================================================================== */
+        .hero-banner {
+            position: relative;
+            padding: 60px 40px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2)),
+                        url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80') center/cover;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-card);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(11, 15, 25, 0.4) 0%, rgba(11, 15, 25, 0.95) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 750px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #FFFFFF 30%, var(--lavender) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        /* Search Bar Widget */
+        .hero-search-box {
+            position: relative;
+            z-index: 2;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-glass);
+            display: grid;
+            grid-template-columns: 2fr 1.2fr 1.2fr 1fr auto;
+            gap: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .search-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+        }
+
+        .search-field i {
+            color: var(--violet-glow);
+            font-size: 1.2rem;
+        }
+
+        .search-field input, .search-field select {
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+        }
+
+        /* Categories Bar */
+        .category-pills {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 30px;
+            scrollbar-width: none;
+        }
+
+        .category-pills::-webkit-scrollbar { display: none; }
+
+        .pill {
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-sub);
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .pill.active, .pill:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Grid Layout for Events */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        /* Event Card */
+        .event-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(124, 58, 237, 0.5);
+            box-shadow: var(--shadow-card), 0 0 15px rgba(124, 58, 237, 0.2);
+        }
+
+        .card-poster {
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .event-card:hover .card-poster img {
+            transform: scale(1.06);
+        }
+
+        .card-badge-container {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .card-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .event-meta-date {
+            font-size: 0.8rem;
+            color: var(--violet-glow);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .event-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .event-venue {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .price-val {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* Trust / Features Grid */
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin: 60px 0;
+        }
+
+        .trust-card {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .trust-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.15);
+            color: var(--violet-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 16px;
+        }
+
+        /* ==========================================================================
+           4. MODALS & CHECKOUT (M-PESA ENFORCED)
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+        }
+
+        .modal-close:hover { color: #fff; }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* M-PESA Specific Checkout Panel */
+        .mpesa-pay-box {
+            background: rgba(5, 176, 72, 0.08);
+            border: 1px solid rgba(5, 176, 72, 0.3);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .mpesa-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .mpesa-logo-badge {
+            background: #05B048;
+            color: #fff;
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .payment-detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+        }
+
+        .copy-btn {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .copy-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Anti-scalping & Safety Banner */
+        .security-notice {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-size: 0.825rem;
+            color: var(--accent-amber);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        /* ==========================================================================
+           5. DASHBOARDS (USER, RESALE, ORGANISER, ADMIN)
+           ========================================================================== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+        }
+
+        .dash-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .dash-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            color: var(--text-sub);
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
+        }
+
+        .dash-nav-btn:hover, .dash-nav-btn.active {
+            background: rgba(124, 58, 237, 0.15);
+            color: var(--violet-glow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-top: 8px;
+            color: #fff;
+        }
+
+        /* Visual Ticket Container */
+        .ticket-stub {
+            background: linear-gradient(135deg, #1E1B4B, #0F172A);
+            border: 1px dashed var(--violet-glow);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            position: relative;
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .ticket-qr-box {
+            background: #fff;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 130px;
+            height: 130px;
+            flex-shrink: 0;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--violet-glow);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-glow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Table Design */
+        .data-table-wrapper {
+            overflow-x: auto;
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        table.data-table th, table.data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        table.data-table th {
+            background: rgba(255,255,255,0.02);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* ==========================================================================
+           6. RESPONSIVE MEDIA QUERIES
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .hero-search-box {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.1rem; }
+            .hero-search-box { grid-template-columns: 1fr; }
+            .nav-menu { display: none; }
+            .mobile-toggle { display: block; }
+            .ticket-stub { flex-direction: column; align-items: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Lighting FX -->
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+    </div>
+
+    <!-- Demonstration Switcher Header Bar -->
+    <div class="demo-bar">
+        <span><strong>VIMA TICKETS Interactive Demo Mode:</strong> Persistent local state active.</span>
+        <div class="demo-controls">
+            <label for="demoRoleSelect" style="color:var(--lavender); font-size:0.8rem;">Switch Persona:</label>
+            <select id="demoRoleSelect" class="demo-role-select" onchange="switchDemoRole(this.value)">
+                <option value="buyer">Standard Buyer / Reseller</option>
+                <option value="organiser">Event Organiser</option>
+                <option value="admin">System Administrator</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand-logo" onclick="switchView('view-home')">
+                <i class="ph-bold ph-ticket"></i> VIMA TICKETS
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" onclick="switchView('view-home')">Home</a></li>
+                <li><a href="#" class="nav-link" onclick="switchView('view-events')">Explore Events</a></li>
+                <li><a href="#" class="nav-link" onclick="switchView('view-resale')">Resale Market</a></li>
+                <li><a href="#" class="nav-link" onclick="switchView('view-how')">How It Works</a></li>
+                <li><a href="#" class="nav-link" onclick="switchView('view-support')">Help Centre</a></li>
+                <li id="navAdminLink" style="display:none;"><a href="#" class="nav-link" style="color:var(--accent-amber)" onclick="switchView('view-admin')"><i class="ph-bold ph-shield-check"></i> Admin Portal</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div id="navAuthLoggedOut">
+                    <button class="btn btn-secondary" style="padding: 8px 16px;" onclick="openModal('modalAuth')">Sign In</button>
+                    <button class="btn btn-primary" style="padding: 8px 16px;" onclick="openModal('modalAuth')">Create Account</button>
+                </div>
+                <div id="navAuthLoggedIn" style="display: none;">
+                    <button class="user-dropdown-btn" onclick="switchView('view-dashboard')">
+                        <div class="user-avatar" id="userAvatarChar">U</div>
+                        <span id="userNameNav" style="font-size: 0.875rem; font-weight: 600;">User</span>
+                        <i class="ph-bold ph-caret-down"></i>
+                    </button>
+                </div>
+                <button class="mobile-toggle" onclick="toggleMobileNav()"><i class="ph-bold ph-list"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+       VIEW 1: HOMEPAGE
+       ========================================================================== -->
+    <main id="view-home" class="page-view active-view container">
+        
+        <!-- Hero Section -->
+        <section class="hero-banner">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="badge badge-purple" style="margin-bottom: 16px;"><i class="ph-bold ph-lightning"></i> Official & Verified Ticketing</span>
+                <h1 class="hero-title">Your Next Unforgettable Experience Starts Here.</h1>
+                <p class="hero-subtitle">Discover, buy and resell event tickets securely. From global concerts to local experiences, your next adventure is just one ticket away.</p>
+                
+                <!-- Search Widget -->
+                <div class="hero-search-box">
+                    <div class="search-field">
+                        <i class="ph-bold ph-magnifying-glass"></i>
+                        <input type="text" id="homeSearchKeyword" placeholder="Search event, artist or team...">
+                    </div>
+                    <div class="search-field">
+                        <i class="ph-bold ph-map-pin"></i>
+                        <select id="homeSearchLocation">
+                            <option value="">All Locations</option>
+                            <option value="Nairobi">Nairobi</option>
+                            <option value="Mombasa">Mombasa</option>
+                            <option value="Naivasha">Naivasha</option>
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <i class="ph-bold ph-calendar"></i>
+                        <input type="date" id="homeSearchDate">
+                    </div>
+                    <button class="btn btn-primary" onclick="triggerHomeSearch()"><i class="ph-bold ph-magnifying-glass"></i> Find Tickets</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Horizontal Pills -->
+        <div class="category-pills">
+            <button class="pill active" onclick="filterCategory('All')">🔥 All Events</button>
+            <button class="pill" onclick="filterCategory('Concerts')">🎵 Concerts</button>
+            <button class="pill" onclick="filterCategory('Festivals')">🎪 Music Festivals</button>
+            <button class="pill" onclick="filterCategory('Sports')">⚽ Sports</button>
+            <button class="pill" onclick="filterCategory('Theatre')">🎭 Theatre & Arts</button>
+            <button class="pill" onclick="filterCategory('Nightlife')">🍸 Nightlife & Clubs</button>
+        </div>
+
+        <!-- Featured / Trending Grid -->
+        <section>
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Trending Events</h2>
+                    <p style="color: var(--text-muted); font-size:0.9rem;">Handpicked live experiences selling fast</p>
+                </div>
+                <a href="#" style="color: var(--violet-glow); font-weight:600;" onclick="switchView('view-events')">View All <i class="ph-bold ph-arrow-right"></i></a>
+            </div>
+            
+            <div class="events-grid" id="trendingEventsContainer">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Trust & Security Highlights -->
+        <section class="trust-grid">
+            <div class="glass-panel trust-card">
+                <div class="trust-icon"><i class="ph-bold ph-shield-check"></i></div>
+                <h3>100% Anti-Fraud Guarantee</h3>
+                <p style="color:var(--text-muted); font-size:0.875rem; margin-top:8px;">Every single ticket listed in our secondary market is verified against original records.</p>
+            </div>
+            <div class="glass-panel trust-card">
+                <div class="trust-icon" style="background:rgba(5, 176, 72, 0.15); color:#05B048;"><i class="ph-bold ph-device-mobile"></i></div>
+                <h3>Strict M-PESA Integration</h3>
+                <p style="color:var(--text-muted); font-size:0.875rem; margin-top:8px;">Instant local payments via M-PESA using official payment number <strong>0740820891</strong>.</p>
+            </div>
+            <div class="glass-panel trust-card">
+                <div class="trust-icon" style="background:rgba(245, 158, 11, 0.15); color:var(--accent-amber);"><i class="ph-bold ph-scales"></i></div>
+                <h3>Fair Resale Price Caps</h3>
+                <p style="color:var(--text-muted); font-size:0.875rem; margin-top:8px;">Secondary tickets are capped to prevent unfair scalping and protect genuine fans.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================================================
+       VIEW 2: EXPLORE MARKETPLACE
+       ========================================================================== -->
+    <main id="view-events" class="page-view container">
+        <div style="margin-bottom: 24px;">
+            <h1 style="font-size:2rem; font-weight:800;">Event Marketplace</h1>
+            <p style="color: var(--text-sub);">Discover original ticket releases and verified resale listings.</p>
+        </div>
+
+        <!-- Filter Controls Panel -->
+        <div class="glass-panel" style="padding: 20px; margin-bottom: 30px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div>
+                    <label style="font-size:0.8rem; color:var(--text-muted);">Search</label>
+                    <input type="text" id="marketSearchInput" placeholder="Title, artist, venue..." onkeyup="filterMarketplace()">
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; color:var(--text-muted);">Category</label>
+                    <select id="marketCategoryFilter" onchange="filterMarketplace()">
+                        <option value="All">All Categories</option>
+                        <option value="Concerts">Concerts</option>
+                        <option value="Festivals">Festivals</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Theatre">Theatre</option>
+                        <option value="Nightlife">Nightlife</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; color:var(--text-muted);">City</label>
+                    <select id="marketCityFilter" onchange="filterMarketplace()">
+                        <option value="All">All Cities</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Naivasha">Naivasha</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; color:var(--text-muted);">Sort By</label>
+                    <select id="marketSortFilter" onchange="filterMarketplace()">
+                        <option value="date-asc">Date: Upcoming First</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="events-grid" id="marketplaceEventsContainer">
+            <!-- Dynamic Injection -->
+        </div>
+    </main>
+
+    <!-- ==========================================================================
+       VIEW 3: SECONDARY RESALE MARKETPLACE
+       ========================================================================== -->
+    <main id="view-resale" class="page-view container">
+        <div class="glass-panel" style="padding: 32px; margin-bottom: 40px; background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(17, 24, 39, 0.8));">
+            <div style="max-width:650px;">
+                <span class="badge badge-amber" style="margin-bottom: 12px;"><i class="ph-bold ph-arrows-clockwise"></i> Fan-to-Fan Marketplace</span>
+                <h1 style="font-size: 2.2rem; font-weight:800; margin-bottom: 12px;">Can't make it to an event? Resell your ticket safely.</h1>
+                <p style="color:var(--text-sub); margin-bottom: 24px;">List your ticket in under 2 minutes. Our automated system checks original issuance records to guarantee authenticity for the next buyer.</p>
+                <button class="btn btn-primary" onclick="openResaleModal()"><i class="ph-bold ph-plus-circle"></i> Create Resale Listing</button>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-bottom: 20px;">Available Verified Resale Tickets</h2>
+        <div class="events-grid" id="resaleListingsContainer">
+            <!-- Dynamic Injection -->
+        </div>
+    </main>
+
+    <!-- ==========================================================================
+       VIEW 4: USER DASHBOARD (MY TICKETS & LISTINGS)
+       ========================================================================== -->
+    <main id="view-dashboard" class="page-view container">
+        <div style="margin-bottom: 24px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h1 style="font-size:1.8rem; font-weight:800;" id="userDashTitle">My Account</h1>
+                <p style="color:var(--text-sub);" id="userDashRoleBadge">Logged in as Fan/Buyer</p>
+            </div>
+            <button class="btn btn-secondary" onclick="logoutUser()"><i class="ph-bold ph-sign-out"></i> Log Out</button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dash-sidebar glass-panel" style="padding:16px;">
+                <button class="dash-nav-btn active" onclick="switchDashTab('tickets')"><i class="ph-bold ph-ticket"></i> My Digital Tickets</button>
+                <button class="dash-nav-btn" onclick="switchDashTab('listings')"><i class="ph-bold ph-tag"></i> My Resale Listings</button>
+                <button class="dash-nav-btn" onclick="switchDashTab('orders')"><i class="ph-bold ph-receipt"></i> M-PESA Orders</button>
+                <button class="dash-nav-btn" id="organiserTabBtn" style="display:none;" onclick="switchDashTab('organiser')"><i class="ph-bold ph-chart-line-up"></i> Organiser Portal</button>
+            </div>
+
+            <div class="dash-content">
+                <!-- Sub Tab 1: Digital Tickets -->
+                <div id="dash-tab-tickets">
+                    <h3 style="margin-bottom: 16px;">My Purchased Tickets</h3>
+                    <div id="userTicketsList">
+                        <!-- Dynamic Injection -->
+                    </div>
+                </div>
+
+                <!-- Sub Tab 2: User Resale Listings -->
+                <div id="dash-tab-listings" style="display: none;">
+                    <h3 style="margin-bottom: 16px;">My Active Resale Listings</h3>
+                    <div id="userListingsList">
+                        <!-- Dynamic Injection -->
+                    </div>
+                </div>
+
+                <!-- Sub Tab 3: M-PESA Orders -->
+                <div id="dash-tab-orders" style="display: none;">
+                    <h3 style="margin-bottom: 16px;">M-PESA Order History</h3>
+                    <div class="glass-panel data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order Reference</th>
+                                    <th>Event</th>
+                                    <th>Amount</th>
+                                    <th>M-PESA Code</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userOrdersTable">
+                                <!-- Dynamic Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sub Tab 4: Organiser Management -->
+                <div id="dash-tab-organiser" style="display: none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3>Organiser Sales Overview</h3>
+                        <button class="btn btn-primary" onclick="openModal('modalCreateEvent')"><i class="ph-bold ph-plus"></i> Create New Event</button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span style="color:var(--text-muted); font-size:0.8rem;">Total Revenue</span>
+                            <div class="stat-number" id="orgTotalRev">KSh 0</div>
+                        </div>
+                        <div class="stat-card">
+                            <span style="color:var(--text-muted); font-size:0.8rem;">Tickets Sold</span>
+                            <div class="stat-number" id="orgTicketsSold">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <span style="color:var(--text-muted); font-size:0.8rem;">Active Events</span>
+                            <div class="stat-number" id="orgActiveEvents">0</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 20px 0 12px;">Managed Events</h4>
+                    <div class="glass-panel data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <th>Date</th>
+                                    <th>Venue</th>
+                                    <th>Tickets Sold</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="organiserEventsTable">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==========================================================================
+       VIEW 5: ADMIN PORTAL (DEMO SECURITY & VERIFICATION)
+       ========================================================================== -->
+    <main id="view-admin" class="page-view container">
+        <div style="margin-bottom: 24px;">
+            <span class="badge badge-amber"><i class="ph-bold ph-shield"></i> Administration Console</span>
+            <h1 style="font-size:2rem; font-weight:800; margin-top:6px;">Platform Control & Verification</h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span style="color:var(--text-muted); font-size:0.8rem;">Pending M-PESA Verification</span>
+                <div class="stat-number" id="adminPendingMpesaCount" style="color:var(--accent-amber);">0</div>
+            </div>
+            <div class="stat-card">
+                <span style="color:var(--text-muted); font-size:0.8rem;">Pending Resale Approvals</span>
+                <div class="stat-number" id="adminPendingResaleCount" style="color:var(--violet-glow);">0</div>
+            </div>
+            <div class="stat-card">
+                <span style="color:var(--text-muted); font-size:0.8rem;">Total Platform Volume</span>
+                <div class="stat-number" id="adminTotalVolume">KSh 0</div>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding:20px; margin-bottom:30px;">
+            <h3 style="margin-bottom:16px;">1. Pending M-PESA Payment Verifications</h3>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order Ref</th>
+                            <th>Buyer</th>
+                            <th>Amount Payable</th>
+                            <th>User M-PESA Code</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminMpesaTable">
+                        <!-- Dynamic -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding:20px;">
+            <h3 style="margin-bottom:16px;">2. Secondary Resale Ticket Auditing</h3>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Listing ID</th>
+                            <th>Event</th>
+                            <th>Original Price</th>
+                            <th>Resale Price</th>
+                            <th>Seller</th>
+                            <th>Audit Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminResaleTable">
+                        <!-- Dynamic -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==========================================================================
+       VIEW 6: HELP CENTRE & CUSTOMER SUPPORT
+       ========================================================================== -->
+    <main id="view-support" class="page-view container">
+        <div style="text-align: center; max-width:600px; margin: 0 auto 40px;">
+            <h1 style="font-size:2.2rem; font-weight:800; margin-bottom:12px;">How can we help you?</h1>
+            <p style="color:var(--text-sub);">Search our knowledge base or get in touch with our ticket support team.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
+            <!-- FAQ Accordion -->
+            <div>
+                <h3 style="margin-bottom:16px;">Frequently Asked Questions</h3>
+                <div class="glass-panel" style="padding: 20px; display:flex; flex-direction:column; gap:16px;">
+                    <div>
+                        <h4 style="color:var(--violet-glow); margin-bottom:6px;">How do I pay with M-PESA?</h4>
+                        <p style="font-size:0.875rem; color:var(--text-sub);">Send the exact ticket amount to official number <strong>0740820891</strong> via M-PESA Send Money or Paybill, then submit your 10-digit transaction code during checkout.</p>
+                    </div>
+                    <hr style="border-color:var(--border-glass);">
+                    <div>
+                        <h4 style="color:var(--violet-glow); margin-bottom:6px;">How does secondary resale verification work?</h4>
+                        <p style="font-size:0.875rem; color:var(--text-sub);">When a ticket is resold, our system cross-checks the original ticket ID. Upon confirmation, the original barcode is invalidated and a fresh QR code is issued to the new buyer.</p>
+                    </div>
+                    <hr style="border-color:var(--border-glass);">
+                    <div>
+                        <h4 style="color:var(--violet-glow); margin-bottom:6px;">Are ticket prices capped on resale?</h4>
+                        <p style="font-size:0.875rem; color:var(--text-sub);">Yes. VIMA TICKETS enforces a strict 120% face value price cap on all secondary resale listings to protect fans from aggressive scalping.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div>
+                <h3 style="margin-bottom:16px;">Contact Support Team</h3>
+                <form class="glass-panel" style="padding:24px;" onsubmit="handleSupportSubmit(event)">
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Your Name</label>
+                        <input type="text" required placeholder="John Doe">
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Email Address</label>
+                        <input type="email" required placeholder="john@example.com">
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Topic</label>
+                        <select>
+                            <option>M-PESA Payment Inquiry</option>
+                            <option>Ticket Verification Issue</option>
+                            <option>Resale Listing Request</option>
+                            <option>Organiser Partnership</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Message</label>
+                        <textarea rows="4" required placeholder="Describe your issue in detail..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Submit Support Ticket</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Static Page Views (How it works & legal) -->
+    <main id="view-how" class="page-view container">
+        <h1 style="font-size:2rem; font-weight:800; margin-bottom:20px;">How VIMA TICKETS Works</h1>
+        <div class="trust-grid">
+            <div class="glass-panel trust-card">
+                <h2>1. Discover</h2>
+                <p style="color:var(--text-sub); margin-top:10px;">Browse verified events or search for secondary ticket resales from genuine fans.</p>
+            </div>
+            <div class="glass-panel trust-card">
+                <h2>2. Pay via M-PESA</h2>
+                <p style="color:var(--text-sub); margin-top:10px;">Transfer payment directly to <strong>0740820891</strong> and input your transaction code.</p>
+            </div>
+            <div class="glass-panel trust-card">
+                <h2>3. Get QR Ticket</h2>
+                <p style="color:var(--text-sub); margin-top:10px;">Access your dynamic digital QR ticket inside your account for instant gate entry.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==========================================================================
+       MODALS (EVENT DETAILS, M-PESA CHECKOUT, AUTHENTICATION, RESALE)
+       ========================================================================== -->
+
+    <!-- 1. Event Detail & Checkout Modal -->
+    <div class="modal-overlay" id="modalEventDetail">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalEventTitle">Event Title</h3>
+                <button class="modal-close" onclick="closeModal('modalEventDetail')"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="height:200px; border-radius:var(--radius-md); overflow:hidden; margin-bottom:16px;">
+                    <img id="modalEventImage" src="" style="width:100%; height:100%; object-fit:cover;" alt="Poster">
+                </div>
+                
+                <p id="modalEventDescription" style="color:var(--text-sub); margin-bottom:20px; font-size:0.95rem; line-height:1.5;"></p>
+                
+                <h4 style="margin-bottom:12px;">Select Ticket Tier</h4>
+                <div id="modalTicketTiers" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                    <!-- Tier rows dynamic -->
+                </div>
+
+                <div class="glass-panel" style="padding:16px; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span>Total Payable:</span>
+                        <strong id="modalCalculatedTotal" style="font-size:1.2rem; color:var(--violet-glow);">KSh 0</strong>
+                    </div>
+                </div>
+
+                <button class="btn btn-mpesa" style="width:100%;" onclick="proceedToMpesaCheckout()"><i class="ph-bold ph-device-mobile"></i> Pay with M-PESA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. M-PESA ONLY Checkout Payment Modal -->
+    <div class="modal-overlay" id="modalMpesaCheckout">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Complete Payment via M-PESA</h3>
+                <button class="modal-close" onclick="closeModal('modalMpesaCheckout')"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="mpesa-pay-box">
+                    <div class="mpesa-header">
+                        <span class="mpesa-logo-badge">M-PESA</span>
+                        <span style="font-weight:700;">Official Payment Gateway</span>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--text-muted); display:block;">PAYMENT NUMBER</span>
+                            <strong style="font-size:1.1rem; color:#fff;" id="displayMpesaNo">0740820891</strong>
+                        </div>
+                        <button class="copy-btn" onclick="copyToClipboard('0740820891', 'M-PESA Payment Number copied!')"><i class="ph-bold ph-copy"></i> Copy Number</button>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--text-muted); display:block;">EXACT AMOUNT PAYABLE</span>
+                            <strong style="font-size:1.1rem; color:var(--accent-green);" id="checkoutAmountDisplay">KSh 0</strong>
+                        </div>
+                        <button class="copy-btn" onclick="copyCheckoutAmount()"><i class="ph-bold ph-copy"></i> Copy Amount</button>
+                    </div>
+
+                    <div style="font-size:0.8rem; color:var(--text-sub); margin-top:10px;">
+                        Order Reference: <strong id="checkoutRefDisplay" style="color:#fff;">VIMA-REF</strong>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <h5 style="margin-bottom:8px;">Payment Instructions:</h5>
+                    <ol style="font-size:0.85rem; color:var(--text-sub); padding-left:20px; line-height:1.6;">
+                        <li>Open M-PESA Menu or Safaricom SIM Toolkit on your phone.</li>
+                        <li>Select <strong>Send Money</strong> (or Paybill) to <strong>0740820891</strong>.</li>
+                        <li>Enter the exact amount displayed above.</li>
+                        <li>Enter your M-PESA PIN and complete the transaction.</li>
+                        <li>Paste your 10-digit M-PESA Confirmation Code below (e.g. QKH7829X91).</li>
+                    </ol>
+                </div>
+
+                <div class="security-notice">
+                    <i class="ph-bold ph-info" style="font-size:1.2rem; flex-shrink:0;"></i>
+                    <span><strong>Demonstration Mode Notice:</strong> Entering your transaction code marks the order as <em>"Pending Verification"</em> until validated by Admin or Daraja API callbacks.</span>
+                </div>
+
+                <form onsubmit="submitMpesaTransaction(event)">
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">M-PESA Transaction Code</label>
+                        <input type="text" id="inputMpesaCode" required placeholder="e.g. QKH7829X91" style="text-transform:uppercase; font-weight:700; letter-spacing:1px;">
+                    </div>
+                    <button type="submit" class="btn btn-mpesa" style="width:100%;">Submit Transaction Code</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Ticket Detail & SVG QR Code Viewer Modal -->
+    <div class="modal-overlay" id="modalTicketViewer">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Digital QR Ticket</h3>
+                <button class="modal-close" onclick="closeModal('modalTicketViewer')"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="modal-body" id="modalTicketViewContent">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Resale Creation Modal -->
+    <div class="modal-overlay" id="modalCreateResale">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>List Ticket for Secondary Resale</h3>
+                <button class="modal-close" onclick="closeModal('modalCreateResale')"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="submitResaleListing(event)">
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Select Purchased Ticket</label>
+                        <select id="resaleSelectTicket" onchange="calculateResaleCap()" required>
+                            <!-- Dynamically populated from user tickets -->
+                        </select>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Original Price</label>
+                            <input type="text" id="resaleOrigPrice" readonly style="opacity:0.7;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Max Allowed Resale (120%)</label>
+                            <input type="text" id="resaleMaxCap" readonly style="opacity:0.7; color:var(--accent-amber);">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Your Resale Price (KSh)</label>
+                        <input type="number" id="resaleInputPrice" required oninput="validateResalePrice()">
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Upload Proof of Ticket (Simulation)</label>
+                        <input type="file" accept="image/*,.pdf" style="padding:8px;">
+                    </div>
+
+                    <div class="security-notice">
+                        <i class="ph-bold ph-shield-check" style="font-size:1.2rem; flex-shrink:0;"></i>
+                        <span>Submitted resales undergo anti-duplication verification before appearing in the marketplace.</span>
+                    </div>
+
+                    <button type="submit" id="btnSubmitResale" class="btn btn-primary" style="width:100%;">Submit Ticket for Verification</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Create Event Modal (Organiser) -->
+    <div class="modal-overlay" id="modalCreateEvent">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Publish New Event</h3>
+                <button class="modal-close" onclick="closeModal('modalCreateEvent')"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleCreateEventSubmit(event)">
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Event Title</label>
+                        <input type="text" id="newEventTitle" required placeholder="Nairobi Summer Fest">
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Category</label>
+                            <select id="newEventCategory">
+                                <option value="Concerts">Concerts</option>
+                                <option value="Festivals">Festivals</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Theatre">Theatre</option>
+                                <option value="Nightlife">Nightlife</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">City</label>
+                            <input type="text" id="newEventCity" required placeholder="Nairobi">
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Venue Name</label>
+                            <input type="text" id="newEventVenue" required placeholder="KICC Grounds">
+                        </div>
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Event Date</label>
+                            <input type="date" id="newEventDate" required>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Regular Ticket Price (KSh)</label>
+                            <input type="number" id="newEventPrice" required placeholder="2000">
+                        </div>
+                        <div>
+                            <label style="font-size:0.8rem; color:var(--text-muted);">Total Tickets Available</label>
+                            <input type="number" id="newEventStock" required placeholder="500">
+                        </div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Poster Image URL</label>
+                        <input type="url" id="newEventPoster" placeholder="https://images.unsplash.com/..." required>
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Event Description</label>
+                        <textarea id="newEventDesc" rows="3" required placeholder="Provide details about lineup, entry rules..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Publish Event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. User Auth Modal -->
+    <div class="modal-overlay" id="modalAuth">
+        <div class="modal-box" style="max-width:400px;">
+            <div class="modal-header">
+                <h3 id="authModalTitle">Sign In to VIMA</h3>
+                <button class="modal-close" onclick="closeModal('modalAuth')"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleAuthSubmit(event)">
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Email Address</label>
+                        <input type="email" id="authEmail" required placeholder="fan@vima.com">
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:0.8rem; color:var(--text-muted);">Password</label>
+                        <input type="password" id="authPass" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Continue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <!-- Footer Container -->
+    <footer style="margin-top:auto; background:rgba(11, 15, 25, 0.95); border-top:1px solid var(--border-glass); padding:50px 0 20px;">
+        <div class="container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:30px; margin-bottom:40px;">
+            <div>
+                <a href="#" class="brand-logo" style="margin-bottom:14px;">
+                    <i class="ph-bold ph-ticket"></i> VIMA TICKETS
+                </a>
+                <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.6;">
+                    One Platform. Every Event. Every Fan.<br>
+                    Official Ticketing & Verified Secondary Resale Marketplace.
+                </p>
+            </div>
+            <div>
+                <h4 style="margin-bottom:14px;">Quick Navigation</h4>
+                <ul style="list-style:none; font-size:0.875rem; color:var(--text-sub); display:flex; flex-direction:column; gap:8px;">
+                    <li><a href="#" onclick="switchView('view-home')">Home</a></li>
+                    <li><a href="#" onclick="switchView('view-events')">Explore Marketplace</a></li>
+                    <li><a href="#" onclick="switchView('view-resale')">Secondary Resale</a></li>
+                    <li><a href="#" onclick="switchView('view-how')">How It Works</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="margin-bottom:14px;">Security & Payment</h4>
+                <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:10px;">Official M-PESA Receiving Number:</p>
+                <div style="background:rgba(5,176,72,0.15); border:1px solid rgba(5,176,72,0.3); padding:8px 12px; border-radius:6px; font-weight:700; color:#05B048; display:inline-block;">
+                    0740820891
+                </div>
+            </div>
+        </div>
+        <div class="container" style="text-align:center; padding-top:20px; border-top:1px solid var(--border-glass); font-size:0.8rem; color:var(--text-muted);">
+            © 2026 VIMA TICKETS. All rights reserved. Designed for Kenya & Global Event Markets.
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+       JAVASCRIPT: APPLICATION LOGIC & STATE Persistent Engine
+       ========================================================================== -->
+    <script>
+        /* ==========================================
+           1. SEED DATA & INITIALIZATION
+           ========================================== */
+        const DEFAULT_EVENTS = [
+            {
+                id: 'evt-1',
+                title: 'Nairobi Mega Afro-Concert 2026',
+                category: 'Concerts',
+                city: 'Nairobi',
+                venue: 'Carnivore Grounds',
+                date: '2026-11-28',
+                price: 2500,
+                stock: 450,
+                poster: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
+                description: 'Experience an electric night featuring top international and regional Afrobeat powerhouses live on stage in Nairobi.',
+                organiser: 'VIMA Live Promotions'
+            },
+            {
+                id: 'evt-2',
+                title: 'Rift Valley Music Festival',
+                category: 'Festivals',
+                city: 'Naivasha',
+                venue: 'Hell\'s Gate Lakeside Arena',
+                date: '2026-12-12',
+                price: 4000,
+                stock: 200,
+                poster: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+                description: 'A 3-day multi-stage festival bringing together electronic, live acoustic, and cultural performances under the stars.',
+                organiser: 'Lakeside Events'
+            },
+            {
+                id: 'evt-3',
+                title: 'Safari Sevens Rugby Championship',
+                category: 'Sports',
+                city: 'Nairobi',
+                venue: 'RFUEA Grounds, Ngong Rd',
+                date: '2026-11-20',
+                price: 1500,
+                stock: 800,
+                poster: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+                description: 'Africa\'s premier international rugby sevens tournament. High-octane matches, fan villages, and entertainment.',
+                organiser: 'Kenya Rugby Union'
+            },
+            {
+                id: 'evt-4',
+                title: 'Amapiano Nightlife Showcase',
+                category: 'Nightlife',
+                city: 'Mombasa',
+                venue: 'Bamburi Beach Club',
+                date: '2026-11-25',
+                price: 1000,
+                stock: 150,
+                poster: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+                description: 'The ultimate coastal beach party featuring South African guest DJs and non-stop Amapiano rhythms.',
+                organiser: 'Coast Vibe Ent'
+            }
+        ];
+
+        const DEFAULT_RESALE = [
+            {
+                resaleId: 'res-101',
+                ticketId: 'tkt-seed-99',
+                eventId: 'evt-1',
+                eventTitle: 'Nairobi Mega Afro-Concert 2026',
+                originalPrice: 2500,
+                resalePrice: 2700,
+                sellerName: 'David K.',
+                status: 'Verified Authentic',
+                proofUploaded: true
+            }
+        ];
+
+        // Global Application State stored in LocalStorage
+        let appState = {
+            user: {
+                name: 'John Fan',
+                email: 'john@vima.com',
+                role: 'buyer' // buyer, organiser, admin
+            },
+            events: [],
+            resaleListings: [],
+            userTickets: [],
+            orders: []
+        };
+
+        // Active Checkout Buffer
+        let activeCheckout = {
+            eventId: null,
+            eventTitle: '',
+            quantity: 1,
+            unitPrice: 0,
+            totalAmount: 0,
+            orderRef: ''
+        };
+
+        /* ==========================================
+           2. APP INITIALIZATION & LOCALSTORAGE persistence
+           ========================================== */
+        window.onload = function() {
+            loadPersistedState();
+            renderHomepageEvents();
+            renderMarketplaceEvents();
+            renderResaleMarketplace();
+            updateUserUI();
+        };
+
+        function loadPersistedState() {
+            const savedState = localStorage.getItem('vima_tickets_state_v1');
+            if (savedState) {
+                try {
+                    appState = JSON.parse(savedState);
+                } catch(e) {
+                    console.error('Failed parsing state', e);
+                }
+            } else {
+                appState.events = DEFAULT_EVENTS;
+                appState.resaleListings = DEFAULT_RESALE;
+                saveState();
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('vima_tickets_state_v1', JSON.stringify(appState));
+        }
+
+        /* ==========================================
+           3. VIEW ROUTER & NAVIGATION
+           ========================================== */
+        function switchView(viewId) {
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.remove('active-view');
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const targetView = document.getElementById(viewId);
+            if (targetView) {
+                targetView.classList.add('active-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Sync user dashboard views if accessed
+            if (viewId === 'view-dashboard') {
+                renderUserDashboard();
+            } else if (viewId === 'view-admin') {
+                renderAdminDashboard();
+            }
+        }
+
+        function switchDemoRole(role) {
+            appState.user.role = role;
+            if (role === 'buyer') appState.user.name = 'John Fan (Buyer)';
+            if (role === 'organiser') appState.user.name = 'Sarah Organiser';
+            if (role === 'admin') appState.user.name = 'System Administrator';
+
+            saveState();
+            updateUserUI();
+            showToast(`Switched persona to: ${role.toUpperCase()}`);
+        }
+
+        function updateUserUI() {
+            const loggedInContainer = document.getElementById('navAuthLoggedIn');
+            const loggedOutContainer = document.getElementById('navAuthLoggedOut');
+            const adminNav = document.getElementById('navAdminLink');
+            const organiserTabBtn = document.getElementById('organiserTabBtn');
+
+            loggedInContainer.style.display = 'flex';
+            loggedOutContainer.style.display = 'none';
+
+            document.getElementById('userNameNav').innerText = appState.user.name;
+            document.getElementById('userAvatarChar').innerText = appState.user.name.charAt(0);
+
+            if (appState.user.role === 'admin') {
+                adminNav.style.display = 'block';
+            } else {
+                adminNav.style.display = 'none';
+            }
+
+            if (appState.user.role === 'organiser' || appState.user.role === 'admin') {
+                if (organiserTabBtn) organiserTabBtn.style.display = 'flex';
+            } else {
+                if (organiserTabBtn) organiserTabBtn.style.display = 'none';
+            }
+
+            document.getElementById('demoRoleSelect').value = appState.user.role;
+        }
+
+        /* ==========================================
+           4. HOMEPAGE & MARKETPLACE RENDERERS
+           ========================================== */
+        function renderHomepageEvents() {
+            const container = document.getElementById('trendingEventsContainer');
+            container.innerHTML = '';
+
+            appState.events.slice(0, 4).forEach(evt => {
+                container.appendChild(createEventCardElement(evt));
+            });
+        }
+
+        function renderMarketplaceEvents(filteredList = null) {
+            const container = document.getElementById('marketplaceEventsContainer');
+            container.innerHTML = '';
+            const listToRender = filteredList || appState.events;
+
+            if (listToRender.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No events found matching your filter criteria.</div>`;
+                return;
+            }
+
+            listToRender.forEach(evt => {
+                container.appendChild(createEventCardElement(evt));
+            });
+        }
+
+        function createEventCardElement(evt) {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <div class="card-poster">
+                    <img src="${evt.poster}" alt="${evt.title}" onerror="this.src='https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80'">
+                    <div class="card-badge-container">
+                        <span class="badge badge-purple">${evt.category}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="event-meta-date"><i class="ph-bold ph-calendar"></i> ${evt.date} • ${evt.city}</div>
+                    <h3 class="event-title">${evt.title}</h3>
+                    <div class="event-venue"><i class="ph-bold ph-map-pin"></i> ${evt.venue}</div>
+                    <div class="card-footer">
+                        <div>
+                            <span class="price-label">Starting from</span>
+                            <div class="price-val">KSh ${evt.price.toLocaleString()}</div>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 8px 16px; font-size:0.85rem;" onclick="openEventDetail('${evt.id}')">View Tickets</button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.category-pills .pill').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText.includes(cat)) btn.classList.add('active');
+            });
+
+            if (cat === 'All') {
+                renderMarketplaceEvents(appState.events);
+            } else {
+                const filtered = appState.events.filter(e => e.category === cat);
+                renderMarketplaceEvents(filtered);
+            }
+            switchView('view-events');
+        }
+
+        function filterMarketplace() {
+            const keyword = document.getElementById('marketSearchInput').value.toLowerCase();
+            const category = document.getElementById('marketCategoryFilter').value;
+            const city = document.getElementById('marketCityFilter').value;
+            const sort = document.getElementById('marketSortFilter').value;
+
+            let result = appState.events.filter(evt => {
+                const matchesKey = evt.title.toLowerCase().includes(keyword) || evt.venue.toLowerCase().includes(keyword);
+                const matchesCat = (category === 'All') || (evt.category === category);
+                const matchesCity = (city === 'All') || (evt.city === city);
+                return matchesKey && matchesCat && matchesCity;
+            });
+
+            if (sort === 'price-asc') result.sort((a,b) => a.price - b.price);
+            if (sort === 'price-desc') result.sort((a,b) => b.price - a.price);
+
+            renderMarketplaceEvents(result);
+        }
+
+        function triggerHomeSearch() {
+            const keyword = document.getElementById('homeSearchKeyword').value.toLowerCase();
+            const location = document.getElementById('homeSearchLocation').value;
+            
+            let filtered = appState.events.filter(evt => {
+                const matchK = !keyword || evt.title.toLowerCase().includes(keyword);
+                const matchL = !location || evt.city === location;
+                return matchK && matchL;
+            });
+
+            switchView('view-events');
+            renderMarketplaceEvents(filtered);
+        }
+
+        /* ==========================================
+           5. EVENT DETAIL & M-PESA CHECKOUT ENGINE
+           ========================================== */
+        function openEventDetail(eventId) {
+            const evt = appState.events.find(e => e.id === eventId);
+            if (!evt) return;
+
+            activeCheckout.eventId = evt.id;
+            activeCheckout.eventTitle = evt.title;
+            activeCheckout.unitPrice = evt.price;
+            activeCheckout.quantity = 1;
+            activeCheckout.totalAmount = evt.price;
+
+            document.getElementById('modalEventTitle').innerText = evt.title;
+            document.getElementById('modalEventImage').src = evt.poster;
+            document.getElementById('modalEventDescription').innerText = evt.description;
+
+            const tiersContainer = document.getElementById('modalTicketTiers');
+            tiersContainer.innerHTML = `
+                <div class="glass-panel" style="padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>Standard Gate Ticket</strong>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">Includes full venue entry & QR mobile pass</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-weight:700;">KSh ${evt.price.toLocaleString()}</span>
+                        <div style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.08); padding:4px 8px; border-radius:6px;">
+                            <button onclick="updateQty(-1)">-</button>
+                            <span id="ticketQtyVal">1</span>
+                            <button onclick="updateQty(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            updateCalculatedTotal();
+            openModal('modalEventDetail');
+        }
+
+        function updateQty(change) {
+            activeCheckout.quantity = Math.max(1, activeCheckout.quantity + change);
+            document.getElementById('ticketQtyVal').innerText = activeCheckout.quantity;
+            updateCalculatedTotal();
+        }
+
+        function updateCalculatedTotal() {
+            activeCheckout.totalAmount = activeCheckout.quantity * activeCheckout.unitPrice;
+            document.getElementById('modalCalculatedTotal').innerText = `KSh ${activeCheckout.totalAmount.toLocaleString()}`;
+        }
+
+        function proceedToMpesaCheckout() {
+            closeModal('modalEventDetail');
+            
+            // Generate Unique Order Ref
+            const randomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+            activeCheckout.orderRef = `VIMA-${randomCode}-2026`;
+
+            document.getElementById('checkoutAmountDisplay').innerText = `KSh ${activeCheckout.totalAmount.toLocaleString()}`;
+            document.getElementById('checkoutRefDisplay').innerText = activeCheckout.orderRef;
+            document.getElementById('inputMpesaCode').value = '';
+
+            openModal('modalMpesaCheckout');
+        }
+
+        function copyCheckoutAmount() {
+            copyToClipboard(activeCheckout.totalAmount.toString(), `Amount KSh ${activeCheckout.totalAmount} copied!`);
+        }
+
+        function submitMpesaTransaction(e) {
+            e.preventDefault();
+            const mpesaCode = document.getElementById('inputMpesaCode').value.trim().toUpperCase();
+            
+            if (mpesaCode.length < 8) {
+                showToast('Please enter a valid M-PESA Transaction Code (e.g. QKH7829X91)', 'error');
+                return;
+            }
+
+            // Create Order Object
+            const newOrder = {
+                orderRef: activeCheckout.orderRef,
+                eventId: activeCheckout.eventId,
+                eventTitle: activeCheckout.eventTitle,
+                amount: activeCheckout.totalAmount,
+                quantity: activeCheckout.quantity,
+                mpesaCode: mpesaCode,
+                buyerEmail: appState.user.email,
+                status: 'Pending Verification',
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            // Issue Digital Tickets (Pending Verification state)
+            for (let i = 0; i < activeCheckout.quantity; i++) {
+                const newTicket = {
+                    ticketId: `TKT-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+                    orderRef: activeCheckout.orderRef,
+                    eventId: activeCheckout.eventId,
+                    eventTitle: activeCheckout.eventTitle,
+                    attendeeName: appState.user.name,
+                    category: 'Regular',
+                    status: 'Active (Payment Verification Pending)',
+                    qrSeed: `VIMA-VALID-${Math.random()}`
+                };
+                appState.userTickets.push(newTicket);
+            }
+
+            appState.orders.push(newOrder);
+            saveState();
+
+            closeModal('modalMpesaCheckout');
+            showToast('Payment Code submitted! Order placed under verification status.', 'success');
+            switchView('view-dashboard');
+        }
+
+        /* ==========================================
+           6. SECONDARY RESALE MARKETPLACE
+           ========================================== */
+        function renderResaleMarketplace() {
+            const container = document.getElementById('resaleListingsContainer');
+            container.innerHTML = '';
+
+            if (appState.resaleListings.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No resale listings currently available.</div>`;
+                return;
+            }
+
+            appState.resaleListings.forEach(res => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <div class="card-badge-container" style="position:static; margin-bottom:12px;">
+                            <span class="badge badge-amber"><i class="ph-bold ph-arrows-clockwise"></i> Secondary Resale</span>
+                            <span class="badge badge-green">${res.status}</span>
+                        </div>
+                        <h3 class="event-title">${res.eventTitle}</h3>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Seller: ${res.sellerName}</div>
+                        
+                        <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:8px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted);">
+                                <span>Original Face Value:</span>
+                                <s>KSh ${res.originalPrice.toLocaleString()}</s>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem; margin-top:4px;">
+                                <span>Resale Price:</span>
+                                <span style="color:var(--accent-green);">KSh ${res.resalePrice.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-mpesa" style="width:100%; font-size:0.85rem;" onclick="buyResaleTicket('${res.resaleId}')">Buy Resale Ticket</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openResaleModal() {
+            const select = document.getElementById('resaleSelectTicket');
+            select.innerHTML = '';
+
+            if (appState.userTickets.length === 0) {
+                showToast('You must own an active ticket to list it for resale.', 'error');
+                return;
+            }
+
+            appState.userTickets.forEach(tkt => {
+                const opt = document.createElement('option');
+                opt.value = tkt.ticketId;
+                opt.innerText = `${tkt.eventTitle} (${tkt.ticketId})`;
+                select.appendChild(opt);
+            });
+
+            calculateResaleCap();
+            openModal('modalCreateResale');
+        }
+
+        function calculateResaleCap() {
+            const ticketId = document.getElementById('resaleSelectTicket').value;
+            const tkt = appState.userTickets.find(t => t.ticketId === ticketId);
+            if (!tkt) return;
+
+            const evt = appState.events.find(e => e.id === tkt.eventId) || { price: 2000 };
+            const maxCap = Math.floor(evt.price * 1.20); // 120% Anti-scalping cap
+
+            document.getElementById('resaleOrigPrice').value = `KSh ${evt.price}`;
+            document.getElementById('resaleMaxCap').value = `KSh ${maxCap}`;
+            document.getElementById('resaleInputPrice').value = maxCap;
+            document.getElementById('resaleInputPrice').max = maxCap;
+        }
+
+        function validateResalePrice() {
+            const input = document.getElementById('resaleInputPrice');
+            const maxCapStr = document.getElementById('resaleMaxCap').value.replace('KSh ', '');
+            const maxCap = parseFloat(maxCapStr);
+
+            if (parseFloat(input.value) > maxCap) {
+                input.style.borderColor = 'var(--accent-rose)';
+                document.getElementById('btnSubmitResale').disabled = true;
+            } else {
+                input.style.borderColor = 'var(--border-glass)';
+                document.getElementById('btnSubmitResale').disabled = false;
+            }
+        }
+
+        function submitResaleListing(e) {
+            e.preventDefault();
+            const ticketId = document.getElementById('resaleSelectTicket').value;
+            const price = parseFloat(document.getElementById('resaleInputPrice').value);
+            const tkt = appState.userTickets.find(t => t.ticketId === ticketId);
+
+            const newResale = {
+                resaleId: `RES-${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
+                ticketId: tkt.ticketId,
+                eventId: tkt.eventId,
+                eventTitle: tkt.eventTitle,
+                originalPrice: parseFloat(document.getElementById('resaleOrigPrice').value.replace('KSh ', '')),
+                resalePrice: price,
+                sellerName: appState.user.name,
+                status: 'Pending Audit',
+                proofUploaded: true
+            };
+
+            appState.resaleListings.push(newResale);
+            tkt.status = 'Listed for Resale';
+            saveState();
+
+            closeModal('modalCreateResale');
+            renderResaleMarketplace();
+            showToast('Resale listing submitted for verification audit.', 'success');
+        }
+
+        function buyResaleTicket(resaleId) {
+            const res = appState.resaleListings.find(r => r.resaleId === resaleId);
+            if (!res) return;
+
+            activeCheckout.eventId = res.eventId;
+            activeCheckout.eventTitle = `[RESALE] ${res.eventTitle}`;
+            activeCheckout.unitPrice = res.resalePrice;
+            activeCheckout.quantity = 1;
+            activeCheckout.totalAmount = res.resalePrice;
+
+            proceedToMpesaCheckout();
+        }
+
+        /* ==========================================
+           7. DASHBOARDS (USER & ADMIN)
+           ========================================== */
+        function renderUserDashboard() {
+            document.getElementById('userDashTitle').innerText = `Welcome, ${appState.user.name}`;
+            document.getElementById('userDashRoleBadge').innerText = `Role: ${appState.user.role.toUpperCase()}`;
+
+            // Render Tickets
+            const ticketsContainer = document.getElementById('userTicketsList');
+            ticketsContainer.innerHTML = '';
+            
+            if (appState.userTickets.length === 0) {
+                ticketsContainer.innerHTML = `<div style="padding:20px; color:var(--text-muted);">No purchased digital tickets found.</div>`;
+            } else {
+                appState.userTickets.forEach(tkt => {
+                    const stub = document.createElement('div');
+                    stub.className = 'ticket-stub';
+                    stub.innerHTML = `
+                        <div class="ticket-qr-box">
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <rect width="100" height="100" fill="#fff"/>
+                                <path d="M10 10h30v30H10zM18 18v14h14V18zM60 10h30v30H60zM68 18v14h14V18zM10 60h30v30H10zM18 68v14h14V68zM50 50h10v10H50zM70 60h20v10H70zM50 80h30v10H50z" fill="#0B0F19"/>
+                            </svg>
+                        </div>
+                        <div style="flex-grow:1;">
+                            <span class="badge badge-purple" style="margin-bottom:6px;">${tkt.category}</span>
+                            <h4>${tkt.eventTitle}</h4>
+                            <div style="font-size:0.8rem; color:var(--text-sub); margin:6px 0;">ID: ${tkt.ticketId} • Attendee: ${tkt.attendeeName}</div>
+                            <span class="badge badge-amber">${tkt.status}</span>
+                            <div style="margin-top:14px; display:flex; gap:10px;">
+                                <button class="btn btn-secondary" style="padding:6px 12px; font-size:0.75rem;" onclick="viewDigitalTicket('${tkt.ticketId}')"><i class="ph-bold ph-qr-code"></i> View Full Ticket</button>
+                            </div>
+                        </div>
+                    `;
+                    ticketsContainer.appendChild(stub);
+                });
+            }
+
+            // Render Orders Table
+            const ordersTable = document.getElementById('userOrdersTable');
+            ordersTable.innerHTML = '';
+            appState.orders.forEach(ord => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${ord.orderRef}</strong></td>
+                    <td>${ord.eventTitle}</td>
+                    <td>KSh ${ord.amount.toLocaleString()}</td>
+                    <td><code>${ord.mpesaCode}</code></td>
+                    <td><span class="badge ${ord.status === 'Verified Paid' ? 'badge-green' : 'badge-amber'}">${ord.status}</span></td>
+                `;
+                ordersTable.appendChild(tr);
+            });
+
+            renderOrganiserStats();
+        }
+
+        function viewDigitalTicket(ticketId) {
+            const tkt = appState.userTickets.find(t => t.ticketId === ticketId);
+            if (!tkt) return;
+
+            const modalContent = document.getElementById('modalTicketViewContent');
+            modalContent.innerHTML = `
+                <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #1E1B4B, #0F172A); border-radius:12px; border:1px dashed var(--violet-glow);">
+                    <span class="badge badge-purple" style="margin-bottom:12px;">OFFICIAL DIGITAL PASS</span>
+                    <h2>${tkt.eventTitle}</h2>
+                    <p style="color:var(--text-sub); font-size:0.85rem; margin-bottom:20px;">Ticket Code: ${tkt.ticketId}</p>
+
+                    <div style="background:#fff; padding:16px; border-radius:12px; display:inline-block; margin-bottom:20px;">
+                        <svg width="160" height="160" viewBox="0 0 100 100">
+                            <rect width="100" height="100" fill="#fff"/>
+                            <path d="M10 10h30v30H10zM18 18v14h14V18zM60 10h30v30H60zM68 18v14h14V18zM10 60h30v30H10zM18 68v14h14V68zM50 50h10v10H50zM70 60h20v10H70zM50 80h30v10H50z" fill="#0B0F19"/>
+                        </svg>
+                    </div>
+
+                    <div style="font-size:0.85rem; color:var(--text-muted);">
+                        Attendee: <strong>${tkt.attendeeName}</strong><br>
+                        Security Status: <strong style="color:var(--accent-green);">${tkt.status}</strong>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="showToast('Ticket PDF Download Simulation Initiated', 'success')"><i class="ph-bold ph-download"></i> Download Offline PDF Ticket</button>
+                </div>
+            `;
+            openModal('modalTicketViewer');
+        }
+
+        function switchDashTab(tab) {
+            document.querySelectorAll('.dash-nav-btn').forEach(btn => btn.classList.remove('active'));
+            ['tickets', 'listings', 'orders', 'organiser'].forEach(t => {
+                const el = document.getElementById(`dash-tab-${t}`);
+                if (el) el.style.display = (t === tab) ? 'block' : 'none';
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        function renderAdminDashboard() {
+            const pendingMpesa = appState.orders.filter(o => o.status === 'Pending Verification');
+            const pendingResale = appState.resaleListings.filter(r => r.status === 'Pending Audit');
+            
+            document.getElementById('adminPendingMpesaCount').innerText = pendingMpesa.length;
+            document.getElementById('adminPendingResaleCount').innerText = pendingResale.length;
+
+            let totalVol = appState.orders.reduce((acc, curr) => acc + curr.amount, 0);
+            document.getElementById('adminTotalVolume').innerText = `KSh ${totalVol.toLocaleString()}`;
+
+            // M-PESA Table
+            const mpesaTbody = document.getElementById('adminMpesaTable');
+            mpesaTbody.innerHTML = '';
+            appState.orders.forEach((ord, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${ord.orderRef}</strong></td>
+                    <td>${ord.buyerEmail}</td>
+                    <td>KSh ${ord.amount.toLocaleString()}</td>
+                    <td><code>${ord.mpesaCode}</code></td>
+                    <td>
+                        ${ord.status === 'Pending Verification' ? 
+                            `<button class="btn btn-primary" style="padding:4px 10px; font-size:0.75rem;" onclick="verifyMpesaOrder(${index})">Approve M-PESA</button>` : 
+                            `<span class="badge badge-green">Verified</span>`}
+                    </td>
+                `;
+                mpesaTbody.appendChild(tr);
+            });
+
+            // Resale Audit Table
+            const resaleTbody = document.getElementById('adminResaleTable');
+            resaleTbody.innerHTML = '';
+            appState.resaleListings.forEach((res, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${res.resaleId}</td>
+                    <td>${res.eventTitle}</td>
+                    <td>KSh ${res.originalPrice}</td>
+                    <td>KSh ${res.resalePrice}</td>
+                    <td>${res.sellerName}</td>
+                    <td><span class="badge badge-amber">${res.status}</span></td>
+                    <td>
+                        ${res.status !== 'Verified Authentic' ? 
+                            `<button class="btn btn-primary" style="padding:4px 10px; font-size:0.75rem;" onclick="approveResaleAudit(${idx})">Verify Ticket</button>` : 
+                            `<span class="badge badge-green">Active</span>`}
+                    </td>
+                `;
+                resaleTbody.appendChild(tr);
+            });
+        }
+
+        function verifyMpesaOrder(orderIdx) {
+            appState.orders[orderIdx].status = 'Verified Paid';
+            // Update associated user tickets
+            const ref = appState.orders[orderIdx].orderRef;
+            appState.userTickets.forEach(t => {
+                if (t.orderRef === ref) t.status = 'Verified & Valid';
+            });
+            saveState();
+            renderAdminDashboard();
+            showToast('M-PESA Transaction Approved & Digital Tickets Verified!', 'success');
+        }
+
+        function approveResaleAudit(idx) {
+            appState.resaleListings[idx].status = 'Verified Authentic';
+            saveState();
+            renderAdminDashboard();
+            renderResaleMarketplace();
+            showToast('Secondary Resale Ticket Verified & Listed!', 'success');
+        }
+
+        function renderOrganiserStats() {
+            const table = document.getElementById('organiserEventsTable');
+            if (!table) return;
+            table.innerHTML = '';
+
+            appState.events.forEach(evt => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${evt.title}</strong></td>
+                    <td>${evt.date}</td>
+                    <td>${evt.venue}</td>
+                    <td>${500 - evt.stock} / 500</td>
+                    <td><span class="badge badge-green">Live Sales</span></td>
+                `;
+                table.appendChild(tr);
+            });
+
+            document.getElementById('orgTotalRev').innerText = 'KSh 145,000';
+            document.getElementById('orgTicketsSold').innerText = '72';
+            document.getElementById('orgActiveEvents').innerText = appState.events.length;
+        }
+
+        function handleCreateEventSubmit(e) {
+            e.preventDefault();
+            const newEvt = {
+                id: `evt-${Date.now()}`,
+                title: document.getElementById('newEventTitle').value,
+                category: document.getElementById('newEventCategory').value,
+                city: document.getElementById('newEventCity').value,
+                venue: document.getElementById('newEventVenue').value,
+                date: document.getElementById('newEventDate').value,
+                price: parseFloat(document.getElementById('newEventPrice').value),
+                stock: parseInt(document.getElementById('newEventStock').value),
+                poster: document.getElementById('newEventPoster').value,
+                description: document.getElementById('newEventDesc').value,
+                organiser: appState.user.name
+            };
+
+            appState.events.unshift(newEvt);
+            saveState();
+            closeModal('modalCreateEvent');
+            renderHomepageEvents();
+            renderMarketplaceEvents();
+            showToast('New Event Published Successfully!', 'success');
+        }
+
+        /* ==========================================
+           8. HELPERS & UTILITIES
+           ========================================== */
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function copyToClipboard(text, successMsg) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(successMsg, 'success');
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="ph-bold ph-info" style="color:var(--violet-glow)"></i> <span>${msg}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function handleSupportSubmit(e) {
+            e.preventDefault();
+            showToast('Support Ticket Submitted. Reference #SUP-8821', 'success');
+            e.target.reset();
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            appState.user.email = document.getElementById('authEmail').value;
+            appState.user.name = document.getElementById('authEmail').value.split('@')[0];
+            saveState();
+            updateUserUI();
+            closeModal('modalAuth');
+            showToast('Signed in successfully!', 'success');
+        }
+
+        function logoutUser() {
+            appState.user = { name: 'Guest User', email: '', role: 'buyer' };
+            saveState();
+            updateUserUI();
+            switchView('view-home');
+            showToast('Signed out of VIMA TICKETS');
+        }
+
+        function toggleMobileNav() {
+            const menu = document.querySelector('.nav-menu');
+            if (menu.style.display === 'flex') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'flex';
+                menu.style.flexDirection = 'column';
+                menu.style.position = 'absolute';
+                menu.style.top = '72px';
+                menu.style.left = '0';
+                menu.style.width = '100%';
+                menu.style.background = '#0B0F19';
+                menu.style.padding = '20px';
+                menu.style.borderBottom = '1px solid var(--border-glass)';
+            }
+        }
+    </script>
+</body>
+</html>
